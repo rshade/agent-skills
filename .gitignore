@@ -1,0 +1,8 @@
+PUNCHLIST.md
+PR_MESSAGE.md
+
+# Local Claude Code settings (machine-specific paths)
+.claude/
+
+# Node.js
+node_modules/
