@@ -30,6 +30,18 @@ to sensible defaults. Supports auto-fix mode.
 - Validating documentation before committing
 - Enforcing consistent markdown formatting
 
+### pull-request-msg-with-gh
+
+Generate a PR_MESSAGE.md file from session context using GitHub CLI.
+Detects related issues via branch-keyword search, writes a structured PR
+description, and validates with commitlint and markdownlint.
+
+**Use when:**
+
+- Preparing a pull request on GitHub
+- Generating structured PR descriptions from session work
+- Ensuring PR messages pass commitlint and markdownlint validation
+
 ## Installation
 
 ```bash
@@ -41,6 +53,7 @@ To install a specific skill:
 ```bash
 npx skills add rshade/agent-skills -s commitlint
 npx skills add rshade/agent-skills -s markdownlint
+npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 ```
 
 ## Skill structure
