@@ -3,14 +3,27 @@
 Picks and Shovels for digging AI. A collection of reusable skills for
 AI coding agents, distributed via [skills.sh](https://skills.sh).
 
+Each skill packages a complete tool workflow — prerequisite checks,
+config detection, execution, and reporting — so agents handle them
+consistently without repeated prompting.
+
+Compatible with [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+
+## Contents
+
+- [Available skills](#available-skills)
+- [Installation](#installation)
+- [Skill structure](#skill-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Available skills
 
 ### commitlint
 
-Validate commit messages against the
-[Conventional Commits](https://www.conventionalcommits.org/) specification.
-Auto-detects and installs commitlint CLI if missing. Checks project config
-or falls back to sensible defaults.
+Validate commit messages against
+[Conventional Commits](https://www.conventionalcommits.org/). Catches
+malformed messages before they enter your git history.
 
 **Use when:**
 
@@ -18,11 +31,23 @@ or falls back to sensible defaults.
 - Preparing pull requests
 - Enforcing commit message conventions across a team
 
+### go-nolint-audit
+
+Audit Go `//nolint:` directives for staleness and weak justifications.
+Verifies each suppression still triggers, then challenges the top
+candidates through adversarial
+[Red/Blue/White debate](skills/go-nolint-audit/SKILL.md).
+
+**Use when:**
+
+- Inheriting a Go codebase with accumulated nolint directives
+- Periodic cleanup of suppressed lint warnings
+- Nolint count is growing and justifications are not being challenged
+
 ### markdownlint
 
-Validate markdown files against formatting standards. Auto-detects and
-installs markdownlint-cli if missing. Checks project config or falls back
-to sensible defaults. Supports auto-fix mode.
+Validate markdown files against formatting standards. Catches
+inconsistent formatting and supports auto-fix mode.
 
 **Use when:**
 
@@ -32,28 +57,47 @@ to sensible defaults. Supports auto-fix mode.
 
 ### pull-request-msg-with-gh
 
-Generate a PR_MESSAGE.md file from session context using GitHub CLI.
-Detects related issues via branch-keyword search, writes a structured PR
-description, and validates with commitlint and markdownlint.
+Generate a structured `PR_MESSAGE.md` from your current work. Detects
+related issues via GitHub CLI, writes a PR description with summary,
+test plan, and changelog, then validates the output.
 
 **Use when:**
 
 - Preparing a pull request on GitHub
-- Generating structured PR descriptions from session work
+- Generating structured PR descriptions from completed work
 - Ensuring PR messages pass commitlint and markdownlint validation
 
+### scout
+
+Scout Rule — identify the top 3 highest-impact improvement
+opportunities in files you are already touching. Reads entire file
+content, not just changed lines. Focuses on pre-existing code quality,
+not PR bugs.
+
+**Use when:**
+
+- Preparing a pull request and want to leave the code better
+- During code review to suggest quick wins
+- After completing a feature to clean up touched files
+
 ## Installation
+
+Requires [Node.js](https://nodejs.org/) (for `npx`).
+
+Install all skills:
 
 ```bash
 npx skills add rshade/agent-skills
 ```
 
-To install a specific skill:
+Install a specific skill:
 
 ```bash
 npx skills add rshade/agent-skills -s commitlint
+npx skills add rshade/agent-skills -s go-nolint-audit
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
+npx skills add rshade/agent-skills -s scout
 ```
 
 ## Skill structure
@@ -61,13 +105,15 @@ npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 Each skill is a directory under `skills/` containing:
 
 - `SKILL.md` — core workflow with YAML frontmatter (`name` and
-  `description` fields)
-- `references/` — optional subdirectory with detailed specs, configs, and
-  examples
+  `description` fields). The `description` drives when agents activate
+  the skill, so it should be specific about both purpose and trigger
+  conditions.
+- `references/` — optional subdirectory with detailed specs, configs,
+  and examples
 
-Skills use progressive disclosure: `SKILL.md` has the concise workflow an
-agent needs to act, while `references/` holds the details agents consult
-only when needed.
+Skills use progressive disclosure: `SKILL.md` has the concise workflow
+an agent needs to act, while `references/` holds the details agents
+consult only when needed.
 
 ## Contributing
 
@@ -80,8 +126,13 @@ New skills should follow these conventions:
   simulated interactive prompts
 - **Validation**: run `markdownlint` on all markdown files and
   `commitlint` on commit messages before submitting
-- **Pattern**: follow the install check → config detection → run → report
-  workflow used by existing skills
+- **Pattern**: follow the prerequisite check → run → report workflow.
+  Add config detection when the skill wraps a configurable tool
+- **Testing**: install the skill locally and verify the workflow runs
+  end-to-end against a real project
+
+File issues or ideas in the
+[issue tracker](https://github.com/rshade/agent-skills/issues).
 
 ## License
 
