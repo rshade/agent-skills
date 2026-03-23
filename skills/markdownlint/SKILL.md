@@ -6,6 +6,9 @@ description: >
   back to sensible defaults. Supports auto-fix mode. Use when creating
   or modifying markdown files, validating documentation, or enforcing
   markdown conventions.
+compatibility: >
+  Requires Node.js (npx). Works with any project containing markdown
+  files.
 ---
 
 # Markdownlint

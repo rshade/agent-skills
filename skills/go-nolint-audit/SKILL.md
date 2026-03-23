@@ -6,6 +6,9 @@ description: >
   adversarial Red/Blue/White debates on the top candidates for removal.
   Use when inheriting a Go codebase, during periodic cleanup, or when
   nolint count is growing unchecked.
+compatibility: >
+  Requires Go and golangci-lint. Only applicable to Go projects with
+  //nolint directives.
 ---
 
 # Go Nolint Audit

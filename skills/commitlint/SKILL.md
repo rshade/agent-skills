@@ -5,6 +5,8 @@ description: >
   Auto-detects and installs commitlint CLI if missing. Checks project
   config or falls back to sensible defaults. Use when validating commit
   messages, preparing PRs, or enforcing commit conventions.
+compatibility: >
+  Requires Node.js (npx). Works with any git repository.
 ---
 
 # Commitlint

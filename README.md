@@ -7,11 +7,16 @@ Each skill packages a complete tool workflow — prerequisite checks,
 config detection, execution, and reporting — so agents handle them
 consistently without repeated prompting.
 
-Compatible with [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+Built on the [Agent Skills](https://agentskills.io) open standard.
+Compatible with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+and [40+ other AI coding agents](https://skills.sh).
 
 ## Contents
 
 - [Available skills](#available-skills)
+  - [Code quality](#code-quality)
+  - [Workflow](#workflow)
+  - [Decision making](#decision-making)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
 - [Contributing](#contributing)
@@ -19,7 +24,9 @@ Compatible with [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Available skills
 
-### commitlint
+### Code quality
+
+#### commitlint
 
 Validate commit messages against
 [Conventional Commits](https://www.conventionalcommits.org/). Catches
@@ -31,7 +38,7 @@ malformed messages before they enter your git history.
 - Preparing pull requests
 - Enforcing commit message conventions across a team
 
-### go-nolint-audit
+#### go-nolint-audit
 
 Audit Go `//nolint:` directives for staleness and weak justifications.
 Verifies each suppression still triggers, then challenges the top
@@ -44,7 +51,7 @@ candidates through adversarial
 - Periodic cleanup of suppressed lint warnings
 - Nolint count is growing and justifications are not being challenged
 
-### markdownlint
+#### markdownlint
 
 Validate markdown files against formatting standards. Catches
 inconsistent formatting and supports auto-fix mode.
@@ -55,19 +62,7 @@ inconsistent formatting and supports auto-fix mode.
 - Validating documentation before committing
 - Enforcing consistent markdown formatting
 
-### pull-request-msg-with-gh
-
-Generate a structured `PR_MESSAGE.md` from your current work. Detects
-related issues via GitHub CLI, writes a PR description with summary,
-test plan, and changelog, then validates the output.
-
-**Use when:**
-
-- Preparing a pull request on GitHub
-- Generating structured PR descriptions from completed work
-- Ensuring PR messages pass commitlint and markdownlint validation
-
-### scout
+#### scout
 
 Scout Rule — identify the top 3 highest-impact improvement
 opportunities in files you are already touching. Reads entire file
@@ -79,6 +74,37 @@ not PR bugs.
 - Preparing a pull request and want to leave the code better
 - During code review to suggest quick wins
 - After completing a feature to clean up touched files
+
+### Workflow
+
+#### pull-request-msg-with-gh
+
+Generate a structured `PR_MESSAGE.md` from your current work. Detects
+related issues via GitHub CLI, writes a PR description with summary,
+test plan, and changelog, then validates the output.
+
+**Use when:**
+
+- Preparing a pull request on GitHub
+- Generating structured PR descriptions from completed work
+- Ensuring PR messages pass commitlint and markdownlint validation
+
+### Decision making
+
+#### decide
+
+Three-agent adversarial debate protocol (Red/Blue/White team) for
+strategic decisions. Two advocates steelman opposing positions while
+a moderator identifies risks, asks hard questions, and synthesizes a
+binding consensus document.
+
+**Use when:**
+
+- Choosing between two or more alternatives (technology, architecture,
+  pricing, strategy)
+- Evaluating tradeoffs where both sides have legitimate arguments
+- Making high-stakes decisions that benefit from structured adversarial
+  analysis
 
 ## Installation
 
@@ -94,6 +120,7 @@ Install a specific skill:
 
 ```bash
 npx skills add rshade/agent-skills -s commitlint
+npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s go-nolint-audit
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh

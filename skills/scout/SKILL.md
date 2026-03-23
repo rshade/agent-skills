@@ -6,6 +6,8 @@ description: >
   content, not just changed lines. Focuses on pre-existing code quality,
   not PR bugs. Use when preparing a PR, during code review, or after
   completing a feature.
+compatibility: >
+  Requires git. Works with any project that has a diff to analyze.
 ---
 
 # Scout Rule

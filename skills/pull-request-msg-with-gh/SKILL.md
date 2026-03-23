@@ -6,6 +6,8 @@ description: >
   PR description with commit subject, summary, test plan, and changelog.
   Validates with commitlint and markdownlint. Use when preparing a pull
   request on GitHub.
+compatibility: >
+  Requires GitHub CLI (gh) authenticated with the target repository.
 ---
 
 # Pull Request Message Generator
