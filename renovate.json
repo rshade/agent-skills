@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "enabledManagers": [
     "dockerfile",
@@ -15,7 +15,9 @@
   ],
   "packageRules": [
     {
-      "matchManagers": ["dockerfile"],
+      "matchManagers": [
+        "dockerfile"
+      ],
       "groupName": "Docker base image updates",
       "groupSlug": "docker-images",
       "automerge": true,
@@ -24,7 +26,9 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "GitHub Actions updates",
       "groupSlug": "github-actions",
       "automerge": true,
