@@ -1,0 +1,33 @@
+services:
+  test-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    hostname: test-ubuntu
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY:-}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  test-fedora:
+    build:
+      context: .
+      dockerfile: Dockerfile.fedora
+    hostname: test-fedora
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY:-}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  test-alpine:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+    hostname: test-alpine
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY:-}
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW

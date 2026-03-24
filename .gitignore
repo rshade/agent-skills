@@ -1,5 +1,6 @@
 PUNCHLIST.md
 PR_MESSAGE.md
+.env
 
 # Local Claude Code settings (machine-specific paths)
 .claude/

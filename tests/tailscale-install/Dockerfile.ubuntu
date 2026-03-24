@@ -1,0 +1,10 @@
+FROM ubuntu:24.04
+
+RUN apt-get update && apt-get install -y curl iproute2 iptables && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY test-install.sh /test-install.sh
+RUN chmod +x /test-install.sh
+
+ENV DISTRO=ubuntu
+ENTRYPOINT ["/test-install.sh"]

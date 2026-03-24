@@ -1,0 +1,9 @@
+FROM alpine:3.21
+
+RUN apk add --no-cache curl bash iptables iproute2
+
+COPY test-install.sh /test-install.sh
+RUN chmod +x /test-install.sh
+
+ENV DISTRO=alpine
+ENTRYPOINT ["/test-install.sh"]

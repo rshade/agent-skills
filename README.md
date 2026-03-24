@@ -17,6 +17,7 @@ and [40+ other AI coding agents](https://skills.sh).
   - [Code quality](#code-quality)
   - [Workflow](#workflow)
   - [Decision making](#decision-making)
+  - [Networking](#networking)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
 - [Contributing](#contributing)
@@ -106,6 +107,20 @@ binding consensus document.
 - Making high-stakes decisions that benefit from structured adversarial
   analysis
 
+### Networking
+
+#### tailscale-install
+
+Install and configure Tailscale across platforms. Detects OS, distro,
+and environment (including WSL2 and containers), performs the appropriate
+installation, and guides initial connection to a tailnet.
+
+**Use when:**
+
+- Setting up Tailscale on a new machine or server
+- Onboarding a headless server to a tailnet with auth keys
+- Verifying an existing Tailscale installation
+
 ## Installation
 
 Requires [Node.js](https://nodejs.org/) (for `npx`).
@@ -125,6 +140,7 @@ npx skills add rshade/agent-skills -s go-nolint-audit
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 npx skills add rshade/agent-skills -s scout
+npx skills add rshade/agent-skills -s tailscale-install
 ```
 
 ## Skill structure

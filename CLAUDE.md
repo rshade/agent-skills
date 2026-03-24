@@ -54,6 +54,46 @@ When adding a new skill to the repository:
    with a description and "Use when" scenarios.
 4. Validate all new and modified markdown files before committing.
 
+## Testing skills
+
+Evaluate whether a new skill needs automated testing when adding it:
+
+### Always test (add to CI)
+
+- Skills that install software or modify system state
+- Skills that execute external commands
+- Skills with platform-specific behavior (OS detection, etc.)
+
+### Test with agent (Tier 4) when feasible
+
+- Skills with complex multi-step workflows
+- Skills where following the instructions incorrectly could cause harm
+- Skills that are hard to validate by reading alone
+
+### Skip automated testing
+
+- Skills that only provide reference information
+- Skills that produce subjective output (e.g., code review feedback)
+- Skills where verification is inherently manual
+
+### Test structure
+
+```text
+tests/<skill-name>/
+├── run-tests.sh         — entry point
+├── verify-skill.sh      — verification for agent (Tier 4) tests
+├── Dockerfile.*         — optional, for platform-specific testing
+└── docker-compose.yml   — optional, for multi-container tests
+```
+
+Run all tests: `tests/<skill-name>/run-tests.sh`
+
+Run agent test only:
+`tests/run-skill-test.sh <name> "<prompt>" tests/<name>/verify-skill.sh`
+
+Requires `OPENCODE_API_KEY` in `.env` for agent tests. See
+`.env.example` for all supported variables.
+
 ## Validation
 
 - Run `markdownlint` on all created or modified markdown files.

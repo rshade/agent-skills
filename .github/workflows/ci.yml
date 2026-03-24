@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  markdownlint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        run: markdownlint 'skills/**/*.md' 'README.md' 'CLAUDE.md'
+
+  test-install-tier1-2:
+    name: Tailscale Install (Tier 1-2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build test containers
+        working-directory: tests/tailscale-install
+        run: docker compose build
+
+      - name: Test Ubuntu
+        working-directory: tests/tailscale-install
+        run: docker compose run --rm test-ubuntu
+
+      - name: Test Fedora
+        working-directory: tests/tailscale-install
+        run: docker compose run --rm test-fedora
+
+      - name: Test Alpine
+        working-directory: tests/tailscale-install
+        run: docker compose run --rm test-alpine
+
+      - name: Cleanup
+        if: always()
+        working-directory: tests/tailscale-install
+        run: docker compose down --remove-orphans 2>/dev/null || true
+
+  test-install-tier3:
+    name: Tailscale Install (Tier 3 - Peer Discovery)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      || github.event_name == 'workflow_dispatch'
+    env:
+      TS_AUTHKEY: ${{ secrets.TS_AUTHKEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for TS_AUTHKEY
+        id: check-key
+        run: |
+          if [ -z "$TS_AUTHKEY" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: TS_AUTHKEY secret not available"
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build test containers
+        if: steps.check-key.outputs.available == 'true'
+        working-directory: tests/tailscale-install
+        run: docker compose build
+
+      - name: Run peer discovery tests (Tier 3)
+        if: steps.check-key.outputs.available == 'true'
+        working-directory: tests/tailscale-install
+        run: |
+          docker compose up --timeout 120 || true
+          EXIT_CODE=0
+          for distro in ubuntu fedora alpine; do
+            CONTAINER="tailscale-install-test-${distro}-1"
+            CODE=$(docker inspect --format='{{.State.ExitCode}}' "$CONTAINER" 2>/dev/null || echo "unknown")
+            if [ "$CODE" = "0" ]; then
+              echo "--- ${distro}: PASSED ---"
+            else
+              echo "--- ${distro}: FAILED (exit code ${CODE}) ---"
+              EXIT_CODE=1
+            fi
+          done
+          exit "$EXIT_CODE"
+
+      - name: Cleanup
+        if: always()
+        working-directory: tests/tailscale-install
+        run: docker compose down --remove-orphans 2>/dev/null || true
+
+  test-skill-agent:
+    name: Skill Agent Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      || github.event_name == 'workflow_dispatch'
+    env:
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for OPENCODE_API_KEY
+        id: check-key
+        run: |
+          if [ -z "$OPENCODE_API_KEY" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: OPENCODE_API_KEY secret not available"
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test tailscale-install skill
+        if: steps.check-key.outputs.available == 'true'
+        run: >-
+          ./tests/run-skill-test.sh
+          tailscale-install
+          "install tailscale on this machine"
+          tests/tailscale-install/verify-skill.sh
+
+      - name: Test decide skill
+        if: steps.check-key.outputs.available == 'true'
+        run: >-
+          ./tests/run-skill-test.sh
+          decide
+          "Use the decide skill: should our team use red or blue as the primary brand color for a developer tools startup?"
+          tests/decide/verify-skill.sh
