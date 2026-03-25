@@ -18,6 +18,7 @@ and [40+ other AI coding agents](https://skills.sh).
   - [Workflow](#workflow)
   - [Decision making](#decision-making)
   - [Networking](#networking)
+  - [Project management](#project-management)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
 - [Contributing](#contributing)
@@ -121,6 +122,22 @@ installation, and guides initial connection to a tailnet.
 - Onboarding a headless server to a tailnet with auth keys
 - Verifying an existing Tailscale installation
 
+### Project management
+
+#### roadmap
+
+Strategic roadmap management for GitHub repositories. Syncs ROADMAP.md
+with GitHub Issues and labels, bootstraps roadmap files from scratch,
+and runs brainstorming sessions with boundary checking. Five modes:
+sync (default), generate, brainstorm, status, and help.
+
+**Use when:**
+
+- Syncing a ROADMAP.md file with GitHub Issues and milestones
+- Bootstrapping project planning files for a new repository
+- Brainstorming new features with boundary-aware ideation
+- Getting a quick status summary of roadmap progress
+
 ## Installation
 
 Requires [Node.js](https://nodejs.org/) (for `npx`).
@@ -139,6 +156,7 @@ npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s go-nolint-audit
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
+npx skills add rshade/agent-skills -s roadmap
 npx skills add rshade/agent-skills -s scout
 npx skills add rshade/agent-skills -s tailscale-install
 ```
