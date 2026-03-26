@@ -15,9 +15,11 @@ and [40+ other AI coding agents](https://skills.sh).
 
 - [Available skills](#available-skills)
   - [Code quality](#code-quality)
+  - [Go development](#go-development)
   - [Workflow](#workflow)
   - [Decision making](#decision-making)
   - [Networking](#networking)
+  - [Security & dependencies](#security--dependencies)
   - [Project management](#project-management)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
@@ -64,6 +66,19 @@ inconsistent formatting and supports auto-fix mode.
 - Validating documentation before committing
 - Enforcing consistent markdown formatting
 
+#### lint-fix
+
+Detect project linting and validation tools, build an execution
+pipeline, and fix all issues to zero errors. Auto-detects Makefile
+targets, package.json scripts, Go, Python, .NET, and Rust tooling.
+Uses an atomic fix protocol — one issue at a time with re-verification.
+
+**Use when:**
+
+- Fixing linting errors before committing or pushing
+- Running a full validation pipeline to zero errors
+- Setting up linting on a project for the first time
+
 #### scout
 
 Scout Rule — identify the top 3 highest-impact improvement
@@ -76,6 +91,58 @@ not PR bugs.
 - Preparing a pull request and want to leave the code better
 - During code review to suggest quick wins
 - After completing a feature to clean up touched files
+
+#### tech-debt
+
+Systematic technical debt analysis and prioritized remediation plan.
+Investigates architecture, testing, documentation, and infrastructure
+directly. Delegates to scout (code quality), lint-fix (linting),
+security-audit (security), dep-upgrade (dependencies), and
+design-principles (design principles) for specialized analysis.
+Generates a scored TECH_DEBT.md with actionable remediation priorities.
+
+**Use when:**
+
+- Assessing overall project health before a cleanup sprint
+- Onboarding to an unfamiliar codebase
+- Planning quarterly tech debt remediation
+- Justifying cleanup work to stakeholders with concrete scores
+
+#### design-principles
+
+Audit a codebase against well-known software design principles: SOLID,
+DRY, YAGNI, KISS, Law of Demeter, Separation of Concerns, Composition
+over Inheritance, and the code-relevant 12-Factor subset. Scores
+findings by impact and effort, runs an adversarial Red/Blue/White
+debate on contested violations, and generates a prioritized
+DESIGN_AUDIT.md. Composable — can be invoked standalone or delegated
+from `tech-debt`.
+
+**Use when:**
+
+- Reviewing code quality beyond what linters catch
+- Assessing design health before a refactor or cleanup sprint
+- Onboarding to an unfamiliar codebase to understand design debt
+- Running a full tech-debt assessment (called automatically by
+  `tech-debt` when available)
+
+### Go development
+
+#### agent-ready-go
+
+Audit and configure Go applications for effective AI agent collaboration.
+Ensures structured JSON logging (Zap/ZeroLog/Logrus), machine-readable command
+output, thorough golangci-lint config, proper test setup with race detection and
+coverage enforcement, structured error handling with meaningful exit codes,
+context propagation, and non-interactive CLI design with `--yes` flags.
+Includes a ready-to-use `.golangci.yml` and `Makefile`.
+
+**Use when:**
+
+- Setting up a new Go project and want it agent-ready from the start
+- Retrofitting an existing Go app so agents can build, test, and debug it
+  effectively
+- Auditing a Go project against agent-readiness best practices
 
 ### Workflow
 
@@ -122,6 +189,37 @@ installation, and guides initial connection to a tailnet.
 - Onboarding a headless server to a tailnet with auth keys
 - Verifying an existing Tailscale installation
 
+### Security & dependencies
+
+#### dep-upgrade
+
+Safe systematic dependency upgrade with vulnerability scanning.
+Detects project ecosystem (Go, Node.js, Python, Rust, .NET), audits
+outdated and vulnerable packages, presents a prioritized upgrade
+plan, and executes upgrades one at a time with test verification.
+
+**Use when:**
+
+- Updating dependencies after vulnerability alerts
+- Periodic dependency maintenance
+- Upgrading a major version with breaking change assessment
+- Fixing npm audit / govulncheck / pip-audit findings
+
+#### security-audit
+
+Comprehensive security audit covering OWASP Top 10, secrets detection,
+supply chain security, threat modeling (STRIDE/DREAD), and
+language-specific vulnerability patterns. Investigates actual code
+paths rather than grep-matching keywords. Generates a scored
+SECURITY_AUDIT.md with prioritized remediation.
+
+**Use when:**
+
+- Assessing application security before a release or review
+- Onboarding to a codebase with security concerns
+- Periodic security health checks
+- Preparing for a penetration test or compliance audit
+
 ### Project management
 
 #### roadmap
@@ -151,14 +249,20 @@ npx skills add rshade/agent-skills
 Install a specific skill:
 
 ```bash
+npx skills add rshade/agent-skills -s agent-ready-go
 npx skills add rshade/agent-skills -s commitlint
 npx skills add rshade/agent-skills -s decide
+npx skills add rshade/agent-skills -s dep-upgrade
+npx skills add rshade/agent-skills -s design-principles
 npx skills add rshade/agent-skills -s go-nolint-audit
+npx skills add rshade/agent-skills -s lint-fix
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 npx skills add rshade/agent-skills -s roadmap
 npx skills add rshade/agent-skills -s scout
+npx skills add rshade/agent-skills -s security-audit
 npx skills add rshade/agent-skills -s tailscale-install
+npx skills add rshade/agent-skills -s tech-debt
 ```
 
 ## Skill structure

@@ -1,3 +1,5 @@
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # Markdownlint Rules Reference
 
 Reference for markdownlint rules commonly encountered during validation.

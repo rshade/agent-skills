@@ -10,6 +10,8 @@ compatibility: >
   No external tool dependencies. Requires an agent capable of
   spawning parallel sub-agents and performing web research.
 ---
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 
 # Adversarial Consensus Protocol
 

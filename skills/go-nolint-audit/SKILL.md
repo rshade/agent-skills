@@ -10,6 +10,8 @@ compatibility: >
   Requires Go and golangci-lint. Only applicable to Go projects with
   //nolint directives.
 ---
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 
 # Go Nolint Audit
 

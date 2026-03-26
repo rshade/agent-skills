@@ -1,3 +1,5 @@
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # Sync mode — detailed workflow
 
 Persona: Senior Product Manager (operational, pragmatic,

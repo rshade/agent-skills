@@ -9,6 +9,8 @@ description: >
 compatibility: >
   Requires GitHub CLI (gh) authenticated with the target repository.
 ---
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 
 # Pull Request Message Generator
 

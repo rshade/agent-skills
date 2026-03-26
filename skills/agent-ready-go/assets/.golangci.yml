@@ -1,0 +1,204 @@
+# .golangci.yml — Agent-Ready Go linter configuration
+# Compatible with golangci-lint v1.59+ (v1.x series)
+# See: https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+  exclude-dirs:
+    - vendor
+    - mocks
+    - testdata
+    - .git
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  sort-results: true
+
+linters:
+  enable:
+    # Correctness
+    - errcheck       # unchecked errors
+    - govet          # suspicious constructs
+    - staticcheck    # comprehensive static analysis
+    - deadcode       # unused code (replaces deprecated 'unused')
+    - ineffassign    # ineffectual assignments
+    - typecheck      # type check (required)
+
+    # Error handling
+    - wrapcheck      # errors must be wrapped with context
+    - errorlint      # correct error wrapping and comparison
+    - nilerr         # catches return nil where return err was intended
+    - nilnil         # catches (T, error) where both are nil (ambiguous)
+
+    # Code style and quality
+    - revive         # comprehensive Go style
+    - gocritic       # opinionated code quality
+    - gofmt          # formatting
+    - goimports      # import ordering
+    - ireturn        # catches unexpectedly returned interfaces
+    - musttag        # enforces json/yaml struct tags on marshaled types
+
+    # Complexity
+    - cyclop         # cyclomatic complexity
+    - gocognit       # cognitive complexity
+    - funlen         # function length
+
+    # Security
+    - gosec          # security checks
+
+    # Context
+    - contextcheck   # context.Context usage patterns
+    - noctx          # HTTP requests must use context
+
+    # Testing
+    - testifylint    # testify assertion correctness
+    - tparallel      # t.Parallel() usage
+
+    # Logging
+    - loggercheck    # incorrect key-value pairs in slog/zap/logrus/zerolog
+    - zerologlint    # zerolog chains missing .Msg()/.Send()
+    - sloglint       # consistent slog key naming
+
+    # Miscellaneous
+    - exhaustive     # exhaustive switch statements over enums
+    - misspell       # common spelling mistakes
+    - unconvert      # unnecessary type conversions
+    - unparam        # unused function parameters
+    - whitespace     # leading/trailing whitespace in blocks
+    - predeclared    # shadowing predeclared identifiers
+    - nolintlint     # lint directive correctness
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable:
+      - shadow
+      - nilness
+      - unusedresult
+      - unusedwrite
+      - httpresponse
+      - sigchanyzer
+      - sortslice
+      - stringintconv
+      - testinggoroutine
+
+  revive:
+    rules:
+      - name: exported
+      - name: var-naming
+      - name: context-as-argument
+        arguments:
+          - allowTypesBefore: "*testing.T,*testing.B"
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: if-return
+      - name: increment-decrement
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: superfluous-else
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - dupImport
+      - ifElseChain
+      - octalLiteral
+      - hugeParam   # frequent false-positive for config structs
+
+  cyclop:
+    max-complexity: 15
+
+  gocognit:
+    min-complexity: 15
+
+  funlen:
+    lines: 80
+    statements: 50
+
+  gosec:
+    excludes:
+      - G204  # subprocess with variable — too noisy for intentional CLI tools
+
+  wrapcheck:
+    ignorePackageGlobs:
+      - "github.com/*/errors"
+      - "go.uber.org/zap"
+
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  testifylint:
+    enable-all: true
+
+  loggercheck:
+    require-string-key: true
+    no-printf-like: true
+
+  zerologlint:
+    decls: [Event, Context, Logger]
+
+  sloglint:
+    no-mixed-args: true
+    key-naming-case: snake
+
+  nilnil:
+    checked-types:
+      - ptr
+      - func
+      - iface
+      - map
+      - chan
+
+  ireturn:
+    allow:
+      - error
+      - stdlib
+      - context.Context
+
+issues:
+  max-issues-per-linter: 50
+  max-same-issues: 10
+  new: false
+
+  exclude-rules:
+    # Test files get relaxed rules
+    - path: _test\.go
+      linters:
+        - funlen
+        - cyclop
+        - gocognit
+        - gosec
+        - wrapcheck
+        - unparam
+        - ireturn
+        - nilnil
+
+    # Generated files — skip all checks
+    - path: ".*_gen\\.go"
+      linters:
+        - all
+
+    # mocks directory — skip all checks
+    - path: "mocks/"
+      linters:
+        - all
+
+    # main.go exit handling — wrapcheck false-positive
+    - path: "main\\.go"
+      linters:
+        - wrapcheck

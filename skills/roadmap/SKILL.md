@@ -11,6 +11,8 @@ compatibility: >
   Requires GitHub CLI (gh) authenticated. Works with any GitHub
   repository that uses Issues and milestones for project planning.
 ---
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 
 # Strategic Roadmap Management
 

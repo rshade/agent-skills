@@ -1,3 +1,5 @@
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # Label configuration
 
 Shared label definitions and heuristics used by the sync and generate

@@ -15,6 +15,33 @@ skills/<name>/SKILL.md              — core workflow (<200 lines)
 skills/<name>/references/           — detailed specs, configs, examples
 ```
 
+## License headers
+
+Every markdown file under `skills/` must include the Apache 2.0 license
+header. Placement depends on whether the file has YAML frontmatter:
+
+**SKILL.md** (has frontmatter) — header goes after the closing `---`:
+
+```yaml
+---
+name: skill-name
+description: >
+  What this skill does and when to use it.
+---
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+# Skill Title
+```
+
+**References files** (no frontmatter) — header goes on line 1:
+
+```html
+<!-- Copyright 2025-2026 Richard Shade. Licensed under Apache-2.0. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+# Reference Title
+```
+
 ## Skill format
 
 Every skill must have a `SKILL.md` with YAML frontmatter:
