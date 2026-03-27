@@ -262,6 +262,18 @@ against configurable thresholds.
 - Reviewing cost impact of infrastructure changes
 - Enforcing budget thresholds in CI pipelines
 
+#### cost-drift
+
+Drift analysis for Pulumi infrastructure costs. Compares actual vs
+projected spend, flags drifting resources, and generates likely-cause
+explanations with investigation prompts.
+
+**Use when:**
+
+- Investigating why actual cloud spend differs from projections
+- Monitoring cost drift trends over time
+- Validating that infrastructure changes reduced costs as expected
+
 ### Project management
 
 #### roadmap
@@ -294,6 +306,7 @@ Install a specific skill:
 npx skills add rshade/agent-skills -s agent-ready-go
 npx skills add rshade/agent-skills -s commitlint
 npx skills add rshade/agent-skills -s cost-check
+npx skills add rshade/agent-skills -s cost-drift
 npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s dep-upgrade
 npx skills add rshade/agent-skills -s design-principles
