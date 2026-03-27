@@ -20,6 +20,7 @@ and [40+ other AI coding agents](https://skills.sh).
   - [Decision making](#decision-making)
   - [Networking](#networking)
   - [Security & dependencies](#security--dependencies)
+  - [Infrastructure cost](#infrastructure-cost)
   - [Project management](#project-management)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
@@ -247,6 +248,20 @@ SECURITY_AUDIT.md with prioritized remediation.
 - Periodic security health checks
 - Preparing for a penetration test or compliance audit
 
+### Infrastructure cost
+
+#### cost-check
+
+Generic cost estimation for IaC projects. Detects the IaC stack and
+compatible cost tool, runs cost analysis, and flags expensive resources
+against configurable thresholds.
+
+**Use when:**
+
+- Checking infrastructure costs in a Pulumi or Terraform project
+- Reviewing cost impact of infrastructure changes
+- Enforcing budget thresholds in CI pipelines
+
 ### Project management
 
 #### roadmap
@@ -278,6 +293,7 @@ Install a specific skill:
 ```bash
 npx skills add rshade/agent-skills -s agent-ready-go
 npx skills add rshade/agent-skills -s commitlint
+npx skills add rshade/agent-skills -s cost-check
 npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s dep-upgrade
 npx skills add rshade/agent-skills -s design-principles
