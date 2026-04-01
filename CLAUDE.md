@@ -71,15 +71,25 @@ description: >
 
 ## Adding a new skill
 
+Use the `skill-creator:skill-creator` skill for all new skill creation and
+iteration. It handles the full lifecycle: intent capture, drafting,
+test cases, evaluation, and improvement.
+
 When adding a new skill to the repository:
 
-1. Create `skills/<name>/SKILL.md` following the format and conventions
+1. Use `skill-creator:skill-creator` to draft the skill, create test
+   cases, and iterate on quality.
+2. Create `skills/<name>/SKILL.md` following the format and conventions
    above.
-2. Add a `references/` subdirectory if the skill needs detailed specs or
+3. Add a `references/` subdirectory if the skill needs detailed specs or
    configs.
-3. Update `README.md` — add the skill to the "Available skills" section
+4. Create evals — every new skill must include evals via the
+   skill-creator workflow (`evals/evals.json` with test prompts and
+   assertions) and CI test files (`tests/<name>/run-tests.sh` +
+   `verify-skill.sh`).
+5. Update `README.md` — add the skill to the "Available skills" section
    with a description and "Use when" scenarios.
-4. Validate all new and modified markdown files before committing.
+6. Validate all new and modified markdown files before committing.
 
 ## Testing skills
 

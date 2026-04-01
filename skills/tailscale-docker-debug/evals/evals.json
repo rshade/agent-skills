@@ -1,0 +1,46 @@
+{
+  "skill_name": "tailscale-docker-debug",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm running Tailscale in Docker containers using docker compose. I can ping other nodes by their Tailscale IP (100.x.y.z) but when I try to use MagicDNS names like lab-node-b.tail9a660c.ts.net it returns NXDOMAIN. My compose file has NET_ADMIN capability and /dev/net/tun mounted. The containers are on a lab tailnet (tail9a660c.ts.net) but the Docker host runs Tailscale on our corporate tailnet (tucuxi-lungfish.ts.net). Can you help me figure out why DNS isn't working?",
+      "expected_output": "Agent follows the 6-step diagnostic workflow, identifies the DNS resolver chain issue (steps 3-5), and recommends adding dns: [100.100.100.100] and dns_search with the correct tailnet to compose",
+      "files": [],
+      "expectations": [
+        "Checks container logs for userspace vs kernel mode (step 1)",
+        "Checks /etc/resolv.conf inside the container (step 3)",
+        "Identifies the multi-tailnet conflict between host and container",
+        "Recommends adding dns: [100.100.100.100] to compose services",
+        "Recommends dns_search with the correct tailnet or using FQDNs",
+        "References the compose configuration matrix or DNS resolver chain docs"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My Tailscale Docker container keeps falling back to userspace networking even though I added NET_ADMIN capability and mounted /dev/net/tun. The logs show '--tun=userspace-networking'. I'm using the official tailscale/tailscale image with docker compose. Here's my compose snippet:\n\nservices:\n  ts-node:\n    image: tailscale/tailscale:latest\n    cap_add:\n      - NET_ADMIN\n    volumes:\n      - /dev/net/tun:/dev/net/tun\n      - ts-state:/var/lib/tailscale\n    environment:\n      - TS_AUTHKEY=${TS_AUTHKEY}\n      - TS_HOSTNAME=lab-node\n\nWhat am I doing wrong?",
+      "expected_output": "Agent identifies two issues: missing TS_USERSPACE=false env var, and /dev/net/tun should use devices: not volumes:. Also notes missing SYS_MODULE cap, TS_ACCEPT_DNS, and dns: directive.",
+      "files": [],
+      "expectations": [
+        "Identifies TS_USERSPACE=false is missing as primary fix",
+        "Identifies /dev/net/tun should use devices: instead of volumes:",
+        "Explains that containerboot defaults to userspace mode regardless of capabilities",
+        "Recommends adding SYS_MODULE capability",
+        "Recommends adding TS_ACCEPT_DNS=true for MagicDNS",
+        "Provides a corrected compose configuration"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have two Tailscale containers running on the same Docker host. Container A can reach container B using tailscale ping by IP, but nslookup lab-node-b.tail9a660c.ts.net returns results from the wrong tailnet — it's resolving names from the host's tailnet instead of the container's. Both containers show 'Tailscale DNS: enabled' when I run tailscale dns status. The host machine itself is connected to a different Tailscale account. How do I fix the DNS resolution to use the container's tailnet?",
+      "expected_output": "Agent identifies this as a multi-tailnet routing issue where DNS queries to 100.100.100.100 escape to the host via the Docker gateway. Recommends checking ip route get 100.100.100.100 and fixing with dns: and dns_search in compose.",
+      "files": [],
+      "expectations": [
+        "Checks how 100.100.100.100 is routed inside the container (step 4)",
+        "Identifies that DNS queries escape to the host's Tailscale via Docker gateway",
+        "Checks whether container is in kernel mode with a real tailscale0 interface",
+        "Recommends dns_search with the correct tailnet domain",
+        "Explains the difference between host and container tailnet DNS resolution"
+      ]
+    }
+  ]
+}

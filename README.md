@@ -189,6 +189,19 @@ installation, and guides initial connection to a tailnet.
 - Onboarding a headless server to a tailnet with auth keys
 - Verifying an existing Tailscale installation
 
+#### tailscale-docker-debug
+
+Diagnose Tailscale connectivity and DNS failures inside Docker
+containers. Detects userspace vs kernel mode, DNS resolver conflicts,
+TUN interface issues, and multi-tailnet mismatches between host and
+container.
+
+**Use when:**
+
+- Tailscale peers connect by IP but MagicDNS names fail inside containers
+- Containers unexpectedly fall back to userspace networking
+- Running Tailscale on a host and in containers on different tailnets
+
 ### Security & dependencies
 
 #### dep-upgrade
@@ -261,6 +274,7 @@ npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 npx skills add rshade/agent-skills -s roadmap
 npx skills add rshade/agent-skills -s scout
 npx skills add rshade/agent-skills -s security-audit
+npx skills add rshade/agent-skills -s tailscale-docker-debug
 npx skills add rshade/agent-skills -s tailscale-install
 npx skills add rshade/agent-skills -s tech-debt
 ```

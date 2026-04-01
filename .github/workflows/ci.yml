@@ -101,12 +101,13 @@ jobs:
   test-skill-agent:
     name: Skill Agent Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
       || github.event_name == 'workflow_dispatch'
     env:
       OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+      EVAL_LLM_JUDGE: ${{ vars.EVAL_LLM_JUDGE || 'false' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -135,3 +136,39 @@ jobs:
           decide
           "Use the decide skill: should our team use red or blue as the primary brand color for a developer tools startup?"
           tests/decide/verify-skill.sh
+
+      - name: Test commitlint skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/commitlint/run-tests.sh') != ''
+        run: ./tests/commitlint/run-tests.sh
+
+      - name: Test markdownlint skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/markdownlint/run-tests.sh') != ''
+        run: ./tests/markdownlint/run-tests.sh
+
+      - name: Test go-nolint-audit skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/go-nolint-audit/run-tests.sh') != ''
+        run: ./tests/go-nolint-audit/run-tests.sh
+
+      - name: Test scout skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/scout/run-tests.sh') != ''
+        run: ./tests/scout/run-tests.sh
+
+      - name: Test pull-request-msg-with-gh skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/pull-request-msg-with-gh/run-tests.sh') != ''
+        run: ./tests/pull-request-msg-with-gh/run-tests.sh
+
+      - name: Test roadmap skill
+        if: >-
+          steps.check-key.outputs.available == 'true'
+          && hashFiles('tests/roadmap/run-tests.sh') != ''
+        run: ./tests/roadmap/run-tests.sh
