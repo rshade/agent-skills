@@ -1,0 +1,47 @@
+{
+  "skill_name": "tailscale-subnet-router-debug",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have a Tailscale subnet router running on a Linux VM that advertises 10.100.0.0/24. The route shows as approved in the admin console. From my laptop (also on the tailnet), I can ping the subnet router's Tailscale IP (100.64.1.5) just fine, but when I try to reach 10.100.0.50 (a server on that subnet) the connection times out. I checked `ip route` on my laptop and there's no route for 10.100.0.0/24. What's going on?",
+      "expected_output": "Agent identifies two issues: (1) --accept-routes is likely not set on the laptop (step 3), and (2) even when it is, the route will be in table 52, not the main table shown by `ip route` (step 4). Should explain policy routing table 52.",
+      "files": [],
+      "expectations": [
+        "Checks whether --accept-routes is enabled on the client laptop (step 3)",
+        "Explains that `ip route` only shows the main table and Tailscale uses table 52",
+        "Recommends running `ip route show table 52` instead of `ip route`",
+        "Recommends `tailscale set --accept-routes=true` as a fix",
+        "Follows the sequential diagnostic workflow from the skill",
+        "References policy routing or table 52 explanation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm running a Tailscale subnet router in a Docker container using docker-compose. I have TS_ROUTES=192.168.1.0/24 set in the environment, but when I check `tailscale status --json | jq '.Self.AllowedIPs'` it only shows the Tailscale IP, not the 192.168.1.0/24 subnet. The container logs show 'requested tags are invalid' on startup. I'm using an auth key with tag:servers but the route never appears. What should I fix?",
+      "expected_output": "Agent identifies that authentication failed due to invalid tags, which caused containerboot to skip route advertisement. Should recommend checking tagOwners ACL, generating a new auth key with valid tags, then verifying route advertisement.",
+      "files": [],
+      "expectations": [
+        "Identifies 'requested tags are invalid' as an auth failure that prevents route advertisement",
+        "Explains that TS_ROUTES is skipped when auth fails on first boot",
+        "Recommends checking ACL tagOwners for the tag used in the auth key",
+        "Suggests generating a new auth key with valid tags",
+        "Recommends using `tailscale set --advertise-routes` as a runtime fallback",
+        "Follows step 1 of the diagnostic workflow"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our Tailscale subnet router is advertising 10.50.0.0/16 and the route is approved. Clients have --accept-routes=true, and I can see the route in `ip route show table 52` on the client side. IP forwarding is enabled on the router (ip_forward=1). When I SSH from a client to 10.50.0.100 through the subnet router, the TCP SYN arrives at the target (I can see it in tcpdump) but the SYN-ACK never comes back. The target server at 10.50.0.100 has its default gateway set to 10.50.0.1 which is a different router, not the Tailscale subnet router (10.50.0.5). What's happening?",
+      "expected_output": "Agent identifies this as a return path issue (step 7). The target sends its SYN-ACK to 10.50.0.1 (its default gateway), which doesn't know about 100.64.0.0/10 Tailscale IPs and drops the response. Should recommend SNAT/masquerade or static route.",
+      "files": [],
+      "expectations": [
+        "Identifies the return path as the root cause (step 7)",
+        "Explains that the target's default gateway doesn't know Tailscale IPs",
+        "Recommends iptables masquerade or --snat-subnet-routes",
+        "Mentions that Tailscale 1.64+ enables SNAT by default",
+        "Alternatively suggests a static route on the gateway for 100.64.0.0/10",
+        "Correctly diagnoses that steps 1-6 are all passing in this scenario"
+      ]
+    }
+  ]
+}

@@ -202,6 +202,20 @@ container.
 - Containers unexpectedly fall back to userspace networking
 - Running Tailscale on a host and in containers on different tailnets
 
+#### tailscale-subnet-router-debug
+
+Diagnose Tailscale subnet router connectivity failures. Traces the
+full route lifecycle: advertisement, approval, client acceptance,
+policy routing (table 52), and IP forwarding.
+
+**Use when:**
+
+- Clients can reach Tailscale peers but not devices on advertised subnets
+- Subnet routes appear approved but traffic doesn't flow
+- `ip route` shows no subnet route (routes are in table 52)
+- Docker containers fail to advertise routes via `TS_ROUTES`
+- Traffic flows to the target but responses never come back
+
 ### Security & dependencies
 
 #### dep-upgrade
@@ -276,6 +290,7 @@ npx skills add rshade/agent-skills -s scout
 npx skills add rshade/agent-skills -s security-audit
 npx skills add rshade/agent-skills -s tailscale-docker-debug
 npx skills add rshade/agent-skills -s tailscale-install
+npx skills add rshade/agent-skills -s tailscale-subnet-router-debug
 npx skills add rshade/agent-skills -s tech-debt
 ```
 
