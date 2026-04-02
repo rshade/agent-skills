@@ -1,0 +1,33 @@
+{
+  "skill_name": "scout",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the scout skill to identify improvement opportunities in the file skills/scout/evals/fixture.py",
+      "expected_output": "Top 3 ranked suggestions with categories, scores, and code snippets",
+      "files": ["skills/scout/evals/fixture.py"],
+      "assertions": [
+        {
+          "name": "top3_format",
+          "check": "output contains 3 numbered/ranked suggestions in a summary table"
+        },
+        {
+          "name": "categories_used",
+          "check": "output references at least one scout category (dead-code, naming, magic-values, deprecated-patterns, simplification)"
+        },
+        {
+          "name": "scoring_present",
+          "check": "output contains Impact and Low-Risk scores (e.g., 4x5=20 or I=4, R=5, or composite score)"
+        },
+        {
+          "name": "code_context",
+          "check": "output includes specific code snippets or line references from fixture.py"
+        },
+        {
+          "name": "effort_estimates",
+          "check": "output includes effort level (trivial, small, or medium)"
+        }
+      ]
+    }
+  ]
+}
