@@ -1,0 +1,41 @@
+{
+  "skill_name": "pull-request-msg-with-gh",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the pull-request-msg-with-gh skill to generate a PR_MESSAGE.md for the current changes on this branch. There is no associated GitHub issue — omit the Closes footer. Skip gh auth check since gh is not available.",
+      "expected_output": "PR_MESSAGE.md with conventional commit subject, summary, test plan, and changes sections",
+      "files": [],
+      "assertions": [
+        {
+          "name": "file_created",
+          "check": "PR_MESSAGE.md exists in the workspace root"
+        },
+        {
+          "name": "conventional_commit_subject",
+          "check": "first line of PR_MESSAGE.md matches conventional commit format (type(scope): description or type: description)"
+        },
+        {
+          "name": "summary_section",
+          "check": "file contains a ## Summary section with content beyond the commit subject"
+        },
+        {
+          "name": "test_plan_section",
+          "check": "file contains a ## Test plan section with checklist items"
+        },
+        {
+          "name": "changes_section",
+          "check": "file contains a ## Changes section listing new or modified files"
+        },
+        {
+          "name": "trailing_newline",
+          "check": "file ends with exactly one trailing newline"
+        },
+        {
+          "name": "no_redundancy",
+          "check": "summary content adds context beyond simply restating the commit subject line"
+        }
+      ]
+    }
+  ]
+}
