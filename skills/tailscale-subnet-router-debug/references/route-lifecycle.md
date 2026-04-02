@@ -126,7 +126,7 @@ Solutions:
 ## Quick reference
 
 | Stage | Who acts | Default | Verify command |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Advertise | Subnet router | Off | `tailscale status --json \| jq '.Self.AllowedIPs'` |
 | Approve | Admin / ACL | Pending | Admin console or peer's view of AllowedIPs |
 | Distribute | Coordination server | Automatic | Peer's `tailscale status --json` |

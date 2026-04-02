@@ -6,7 +6,7 @@ and jump to the corresponding diagnostic step in SKILL.md.
 ## Quick reference
 
 | Symptom | Root cause | Step |
-|---|---|---|
+| --- | --- | --- |
 | Client pings router but not subnet IPs | `--accept-routes` not set on client | 3 |
 | `ip route` shows no subnet route | Routes are in table 52, not main table | 4 |
 | Route approved but peers don't see it | Propagation delay, or client needs `--accept-routes` | 2-3 |
