@@ -1,0 +1,38 @@
+{
+  "skill_name": "markdownlint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "validate the markdown file at skills/markdownlint/evals/test-doc.md using the markdownlint skill",
+      "expected_output": "Report showing markdown formatting errors with rule IDs and fixes",
+      "files": ["test-doc.md"],
+      "expectations": [
+        "Output references MD rule IDs (MD018, MD022, MD047, MD004, or similar)",
+        "Output mentions the specific file test-doc.md with errors",
+        "Output suggests --fix flag or provides manual correction guidance"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "fix the markdown formatting issues in skills/markdownlint/evals/test-doc.md using the markdownlint skill",
+      "expected_output": "Auto-fix applied, remaining manual fixes reported",
+      "files": ["test-doc.md"],
+      "expectations": [
+        "Output shows markdownlint --fix was run or files were edited to fix issues",
+        "Output reports issues that cannot be auto-fixed or confirms all issues resolved",
+        "Output re-validates after fixes to confirm remaining state"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "validate all markdown files in this project and provide a summary of formatting issues using the markdownlint skill",
+      "expected_output": "Comprehensive report of markdown issues across multiple files with rule references",
+      "files": [],
+      "expectations": [
+        "Output scans multiple markdown files, not just one",
+        "Output categorizes or lists errors by rule ID or file",
+        "Output provides actionable fix guidance for each category of error"
+      ]
+    }
+  ]
+}
