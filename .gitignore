@@ -5,6 +5,9 @@ PR_MESSAGE.md
 # Local Claude Code settings (machine-specific paths)
 .claude/
 
+# Skill-creator eval workspaces
+*-workspace/
+
 # Node.js
 node_modules/
 docs/

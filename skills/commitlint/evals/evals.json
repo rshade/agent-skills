@@ -1,0 +1,38 @@
+{
+  "skill_name": "commitlint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "validate the last commit message in this repository",
+      "expected_output": "Report showing commitlint validation results with rule violations and fix suggestions",
+      "files": [],
+      "expectations": [
+        "Output references running commitlint, npx commitlint, or commit message validation",
+        "Output contains rule IDs like type-enum, subject-empty, header-max-length, or type-empty",
+        "Output suggests a corrected commit message or shows correct format examples"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "check if 'added some stuff' is a valid commit message",
+      "expected_output": "Validation failure report identifying missing type prefix and suggesting conventional format",
+      "files": [],
+      "expectations": [
+        "Output flags missing or invalid type prefix (type-enum or type-empty violation)",
+        "Output shows correct conventional commit format with type prefix (e.g., feat:, fix:, chore:)",
+        "Output lists or references allowed commit types (feat, fix, docs, style, refactor, etc.)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "validate this commit message: 'feature(authentication): Added new JWT-based login system with OAuth2 support for multiple providers including Google and GitHub which enables SSO across all microservices'",
+      "expected_output": "Validation failure identifying invalid type 'feature' and header length exceeding maximum",
+      "files": [],
+      "expectations": [
+        "Output flags 'feature' as invalid type and suggests 'feat' instead",
+        "Output flags header-max-length violation (header exceeds maximum allowed length)",
+        "Output provides a corrected commit message following conventional commits format"
+      ]
+    }
+  ]
+}
