@@ -1,0 +1,44 @@
+{
+  "skill_name": "go-nolint-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the go-nolint-audit skill to audit the nolint directives in the Go project at skills/go-nolint-audit/evals/fixture",
+      "expected_output": "Phase 1 stale/active classification + Phase 2 adversarial Red/Blue/White debate with verdicts",
+      "files": [
+        "skills/go-nolint-audit/evals/fixture/main.go",
+        "skills/go-nolint-audit/evals/fixture/go.mod"
+      ],
+      "assertions": [
+        {
+          "name": "phase1_classification",
+          "check": "output categorizes directives as stale or active"
+        },
+        {
+          "name": "phase2_debate_structure",
+          "check": "output contains Red/Blue/White team arguments"
+        },
+        {
+          "name": "scoring_present",
+          "check": "output contains fixability and justification quality scores"
+        },
+        {
+          "name": "verdict_given",
+          "check": "output contains REMOVE, KEEP, or REWRITE verdict"
+        },
+        {
+          "name": "concrete_diff",
+          "check": "Red team provides a concrete code diff"
+        },
+        {
+          "name": "bare_nolint_flagged",
+          "check": "output flags the bare //nolint directive (no rule specified)"
+        },
+        {
+          "name": "summary_table",
+          "check": "output contains a summary table with file:line, rule, verdict, and effort columns"
+        }
+      ]
+    }
+  ]
+}
