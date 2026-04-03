@@ -24,8 +24,9 @@ echo "========================================="
 echo ""
 
 # Build the base image first, then the Go-enabled image that extends it
-echo "Building test images..."
-docker build -t skill-test-base -f "$REPO_ROOT/tests/base/Dockerfile" "$REPO_ROOT/tests/base/"
+echo "Ensuring base test image..."
+"$REPO_ROOT/tests/base/ensure-base-image.sh"
+echo "Building go-nolint-audit test image..."
 docker build -t skill-test-go-nolint-audit "$SCRIPT_DIR"
 echo ""
 

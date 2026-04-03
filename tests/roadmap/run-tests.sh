@@ -13,41 +13,47 @@ if [ -f "$REPO_ROOT/.env" ]; then
 fi
 
 if [ -z "${OPENCODE_API_KEY:-}" ]; then
-    echo "Error: OPENCODE_API_KEY is required for pull-request-msg-with-gh skill tests."
+    echo "Error: OPENCODE_API_KEY is required for roadmap skill tests."
     echo "Set it in .env or environment."
     exit 1
 fi
 
 echo "========================================="
-echo " PR Message Skill — Test Suite"
+echo " Roadmap Skill — Test Suite"
 echo "========================================="
 echo ""
 
-# Ensure the base image is available (pull from GHCR or build locally)
+# Build the base image first, then the roadmap image with mock gh CLI
+echo "Ensuring base test image..."
 "$REPO_ROOT/tests/base/ensure-base-image.sh"
+echo "Building roadmap test image..."
+docker build -t skill-test-roadmap "$SCRIPT_DIR"
 echo ""
 
-# Create temporary workspace
+# Create a temporary workspace
 TMPDIR=$(mktemp -d)
 trap 'docker run --rm -v "$TMPDIR:/cleanup" alpine rm -rf /cleanup 2>/dev/null; rm -rf "$TMPDIR" 2>/dev/null' EXIT
 
-# Copy skills, verify script, and setup script
+# Copy skills (includes eval fixtures)
 cp -r "$REPO_ROOT/skills" "$TMPDIR/skills"
-cp "$SCRIPT_DIR/verify-skill.sh" "$TMPDIR/verify.sh"
-cp "$SCRIPT_DIR/setup-fixture.sh" "$TMPDIR/setup.sh"
-chmod +x "$TMPDIR/verify.sh" "$TMPDIR/setup.sh"
 
-echo "Running agent test..."
+# Copy fixtures to workspace root so the skill finds them naturally
+cp "$REPO_ROOT/skills/roadmap/evals/CONTEXT.md" "$TMPDIR/CONTEXT.md"
+cp "$REPO_ROOT/skills/roadmap/evals/ROADMAP.md" "$TMPDIR/ROADMAP.md"
+
+cp "$SCRIPT_DIR/verify-skill.sh" "$TMPDIR/verify.sh"
+chmod +x "$TMPDIR/verify.sh"
+
+echo "Running agent test (status mode)..."
 echo ""
 
 docker run --rm \
     -v "$TMPDIR:/workspace" \
     -e "OPENCODE_API_KEY=${OPENCODE_API_KEY}" \
     -e "EVAL_LLM_JUDGE=${EVAL_LLM_JUDGE:-}" \
-    skill-test-base \
-    --skill pull-request-msg-with-gh \
-    --prompt "Use the pull-request-msg-with-gh skill to generate a PR_MESSAGE.md for the current changes on this branch. There is no associated GitHub issue — omit the Closes footer. Skip gh auth check since gh is not available." \
-    --setup /workspace/setup.sh \
+    skill-test-roadmap \
+    --skill roadmap \
+    --prompt "use the roadmap skill in status mode to summarize the current roadmap state" \
     --verify /workspace/verify.sh
 
 EXIT_CODE=$?
@@ -55,11 +61,11 @@ EXIT_CODE=$?
 echo ""
 if [ "$EXIT_CODE" -eq 0 ]; then
     echo "========================================="
-    echo " SKILL TEST PASSED: pull-request-msg-with-gh"
+    echo " SKILL TEST PASSED: roadmap"
     echo "========================================="
 else
     echo "========================================="
-    echo " SKILL TEST FAILED: pull-request-msg-with-gh"
+    echo " SKILL TEST FAILED: roadmap"
     echo "========================================="
 fi
 

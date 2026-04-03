@@ -52,9 +52,8 @@ echo "========================================="
 echo "Prompt: ${PROMPT}"
 echo ""
 
-# Build the base image if not already built
-echo "Building base test image..."
-docker build -t skill-test-base -f "$SCRIPT_DIR/base/Dockerfile" "$SCRIPT_DIR/base/"
+# Ensure the base image is available (pull from GHCR or build locally)
+"$SCRIPT_DIR/base/ensure-base-image.sh"
 
 # Create a temporary directory with writable workspace contents
 TMPDIR=$(mktemp -d)

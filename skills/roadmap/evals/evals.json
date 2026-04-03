@@ -1,0 +1,45 @@
+{
+  "skill_name": "roadmap",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "use the roadmap skill in status mode to summarize the current roadmap state",
+      "expected_output": "Structured summary with progress metrics and roadmap items",
+      "files": ["skills/roadmap/evals/CONTEXT.md", "skills/roadmap/evals/ROADMAP.md"],
+      "assertions": [
+        {
+          "name": "roadmap_items_referenced",
+          "check": "output mentions roadmap items from ROADMAP.md (init command, config validation, plugin system)"
+        },
+        {
+          "name": "status_indicators",
+          "check": "output contains progress metrics, counts, or completion status"
+        },
+        {
+          "name": "structured_format",
+          "check": "output uses tables or organized sections for the summary"
+        },
+        {
+          "name": "context_respected",
+          "check": "output does not recommend items violating CONTEXT.md boundaries (no GUI, no cloud hosting)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "use the roadmap skill to show help",
+      "expected_output": "Available modes and usage information",
+      "files": [],
+      "assertions": [
+        {
+          "name": "modes_listed",
+          "check": "output lists sync, generate, brainstorm, status, and help modes"
+        },
+        {
+          "name": "labels_documented",
+          "check": "output references roadmap/* and effort/* labels"
+        }
+      ]
+    }
+  ]
+}
