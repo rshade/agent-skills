@@ -132,7 +132,9 @@ jobs:
           fi
 
       - name: Test tailscale-install skill
+        id: eval-tailscale-install
         if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: >-
           ./tests/run-skill-test.sh
           tailscale-install
@@ -140,7 +142,9 @@ jobs:
           tests/tailscale-install/verify-skill.sh
 
       - name: Test decide skill
+        id: eval-decide
         if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: >-
           ./tests/run-skill-test.sh
           decide
@@ -148,37 +152,68 @@ jobs:
           tests/decide/verify-skill.sh
 
       - name: Test commitlint skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/commitlint/run-tests.sh') != ''
+        id: eval-commitlint
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/commitlint/run-tests.sh
 
       - name: Test markdownlint skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/markdownlint/run-tests.sh') != ''
+        id: eval-markdownlint
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/markdownlint/run-tests.sh
 
       - name: Test go-nolint-audit skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/go-nolint-audit/run-tests.sh') != ''
+        id: eval-go-nolint-audit
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/go-nolint-audit/run-tests.sh
 
       - name: Test scout skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/scout/run-tests.sh') != ''
+        id: eval-scout
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/scout/run-tests.sh
 
       - name: Test pull-request-msg-with-gh skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/pull-request-msg-with-gh/run-tests.sh') != ''
+        id: eval-pr-msg
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/pull-request-msg-with-gh/run-tests.sh
 
       - name: Test roadmap skill
-        if: >-
-          steps.check-key.outputs.available == 'true'
-          && hashFiles('tests/roadmap/run-tests.sh') != ''
+        id: eval-roadmap
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
         run: ./tests/roadmap/run-tests.sh
+
+      - name: Eval summary
+        if: steps.check-key.outputs.available == 'true'
+        run: |
+          echo "=== Skill Eval Results ==="
+          FAILED=0
+          for eval in \
+            "tailscale-install=${{ steps.eval-tailscale-install.outcome }}" \
+            "decide=${{ steps.eval-decide.outcome }}" \
+            "commitlint=${{ steps.eval-commitlint.outcome }}" \
+            "markdownlint=${{ steps.eval-markdownlint.outcome }}" \
+            "go-nolint-audit=${{ steps.eval-go-nolint-audit.outcome }}" \
+            "scout=${{ steps.eval-scout.outcome }}" \
+            "pull-request-msg-with-gh=${{ steps.eval-pr-msg.outcome }}" \
+            "roadmap=${{ steps.eval-roadmap.outcome }}" \
+          ; do
+            NAME="${eval%%=*}"
+            RESULT="${eval##*=}"
+            if [ "$RESULT" = "failure" ]; then
+              echo "  FAIL: ${NAME}"
+              FAILED=$((FAILED + 1))
+            else
+              echo "  PASS: ${NAME}"
+            fi
+          done
+          echo ""
+          if [ "$FAILED" -gt 0 ]; then
+            echo "${FAILED} eval(s) failed"
+            exit 1
+          fi
+          echo "All evals passed"
