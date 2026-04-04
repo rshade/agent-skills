@@ -1,0 +1,10 @@
+# Default shellcheck configuration.
+# Place as .shellcheckrc in the project root.
+# See: https://github.com/koalaman/shellcheck/wiki/Directive
+
+# Disable specific rules (uncomment as needed):
+# disable=SC2086
+# disable=SC2046
+
+# Set default shell dialect (sh, bash, dash, ksh):
+# shell=bash

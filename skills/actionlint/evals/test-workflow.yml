@@ -1,0 +1,29 @@
+name: Bad CI
+
+on:
+  push:
+    tags: ["v*"]
+    paths: ["src/**"]
+
+jobs:
+  build:
+    steps:
+      - uses: actions/checkout@master
+      - run: echo "Repo is ${{ github.repo }}"
+
+  test:
+    runs-on: ubunut-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "PR title is ${{ github.event.pull_request.title }}"
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      content: read
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo ${{ matrix.operating-system }}

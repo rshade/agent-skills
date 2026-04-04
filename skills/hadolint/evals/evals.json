@@ -1,0 +1,38 @@
+{
+  "skill_name": "hadolint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "validate the Dockerfile at skills/hadolint/evals/Dockerfile.test using the hadolint skill",
+      "expected_output": "Report showing Dockerfile validation errors with DL/SC rule codes and fixes",
+      "files": ["Dockerfile.test"],
+      "expectations": [
+        "Output references running hadolint or Dockerfile validation",
+        "Output identifies specific errors like DL3006, DL3008, DL3009, or similar DL codes",
+        "Output suggests concrete fixes for each error found"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "validate all Dockerfiles in this repository using the hadolint skill",
+      "expected_output": "Validation report covering all Dockerfiles found in the repository",
+      "files": [],
+      "expectations": [
+        "Output references hadolint or Dockerfile validation",
+        "Output scans for Dockerfiles across the repository",
+        "Output reports validation results (pass or fail with details)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "check my Dockerfile for package pinning and image tagging issues using the hadolint skill",
+      "expected_output": "Focused validation identifying image tag and package version pinning issues",
+      "files": ["Dockerfile.test"],
+      "expectations": [
+        "Output references DL3006 (image tagging) or DL3008 (package pinning) or similar",
+        "Output identifies untagged base images or unpinned package versions",
+        "Output provides fix guidance with specific version examples"
+      ]
+    }
+  ]
+}

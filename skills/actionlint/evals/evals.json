@@ -1,0 +1,38 @@
+{
+  "skill_name": "actionlint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "validate the GitHub Actions workflow file at skills/actionlint/evals/test-workflow.yml using the actionlint skill",
+      "expected_output": "Report showing workflow validation errors with categories and fixes",
+      "files": ["test-workflow.yml"],
+      "expectations": [
+        "Output references running actionlint or workflow validation",
+        "Output identifies specific errors like invalid action refs, expression errors, or syntax issues",
+        "Output suggests concrete fixes for each error found"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "validate all GitHub Actions workflow files in this repository using the actionlint skill",
+      "expected_output": "Validation report covering all workflow files in .github/workflows/",
+      "files": [],
+      "expectations": [
+        "Output references actionlint or workflow validation",
+        "Output scans .github/workflows/ directory for workflow files",
+        "Output reports validation results (pass or fail with details)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "check if my GitHub Actions workflow has any security issues using the actionlint skill",
+      "expected_output": "Security-focused validation identifying untrusted input usage and other security concerns",
+      "files": ["test-workflow.yml"],
+      "expectations": [
+        "Output references security checks, shell injection, or untrusted input",
+        "Output identifies the use of untrusted context in run blocks or suggests environment variables",
+        "Output provides fix guidance for security issues found"
+      ]
+    }
+  ]
+}

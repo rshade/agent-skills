@@ -1,0 +1,12 @@
+# Default actionlint configuration.
+# Place as .actionlintrc.yaml in the project root.
+# See: https://github.com/rhysd/actionlint/blob/main/docs/config.md
+
+# Add custom self-hosted runner labels here to suppress
+# "unknown runner label" warnings.
+self-hosted-runner:
+  labels: []
+
+# Regex patterns to ignore specific errors.
+# Each entry is matched against the full error message.
+ignore: []

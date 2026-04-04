@@ -31,6 +31,18 @@ and [40+ other AI coding agents](https://skills.sh).
 
 ### Code quality
 
+#### actionlint
+
+Validate GitHub Actions workflow files for syntax errors, invalid
+references, expression mistakes, and security issues. Catches errors
+before they waste CI minutes.
+
+**Use when:**
+
+- Creating or modifying GitHub Actions workflows
+- Validating CI/CD pipelines before pushing
+- Catching workflow syntax errors and security issues
+
 #### commitlint
 
 Validate commit messages against
@@ -55,6 +67,18 @@ candidates through adversarial
 - Inheriting a Go codebase with accumulated nolint directives
 - Periodic cleanup of suppressed lint warnings
 - Nolint count is growing and justifications are not being challenged
+
+#### hadolint
+
+Validate Dockerfiles against best practices for image tagging, package
+pinning, cleanup, and shell script issues in RUN commands. Supports
+system binary or Docker image fallback.
+
+**Use when:**
+
+- Creating or modifying Dockerfiles
+- Reviewing container images for best practice compliance
+- Catching Dockerfile anti-patterns before building
 
 #### markdownlint
 
@@ -92,6 +116,17 @@ not PR bugs.
 - Preparing a pull request and want to leave the code better
 - During code review to suggest quick wins
 - After completing a feature to clean up touched files
+
+#### shellcheck
+
+Validate shell scripts for syntax errors, common bugs, quoting issues,
+and portability problems. Catches errors before they surface at runtime.
+
+**Use when:**
+
+- Creating or modifying shell scripts
+- Validating bash/sh files before committing
+- Checking scripts for portability between shells
 
 #### tech-debt
 
@@ -303,6 +338,7 @@ npx skills add rshade/agent-skills
 Install a specific skill:
 
 ```bash
+npx skills add rshade/agent-skills -s actionlint
 npx skills add rshade/agent-skills -s agent-ready-go
 npx skills add rshade/agent-skills -s commitlint
 npx skills add rshade/agent-skills -s cost-check
@@ -311,12 +347,14 @@ npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s dep-upgrade
 npx skills add rshade/agent-skills -s design-principles
 npx skills add rshade/agent-skills -s go-nolint-audit
+npx skills add rshade/agent-skills -s hadolint
 npx skills add rshade/agent-skills -s lint-fix
 npx skills add rshade/agent-skills -s markdownlint
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 npx skills add rshade/agent-skills -s roadmap
 npx skills add rshade/agent-skills -s scout
 npx skills add rshade/agent-skills -s security-audit
+npx skills add rshade/agent-skills -s shellcheck
 npx skills add rshade/agent-skills -s tailscale-docker-debug
 npx skills add rshade/agent-skills -s tailscale-install
 npx skills add rshade/agent-skills -s tailscale-subnet-router-debug

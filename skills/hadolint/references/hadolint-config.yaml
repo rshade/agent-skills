@@ -1,0 +1,26 @@
+# Default hadolint configuration.
+# Place as .hadolint.yaml in the project root to customize validation.
+# See: https://github.com/hadolint/hadolint#configure
+
+# Rules to ignore (uncomment as needed):
+# ignored:
+#   - DL3008     # Pin versions in apt-get install
+#   - DL3015     # Use --no-install-recommends flag in apt-get install
+#   - DL3009     # Delete the apt-get lists after installing
+#   - SC2086     # Double quote to prevent globbing
+
+# Trusted registries (images from these skip DL3026 validation):
+# trustedRegistries:
+#   - docker.io
+#   - gcr.io
+#   - ghcr.io
+#   - quay.io
+
+# Override severity levels per rule (error > warning > info > style):
+# override:
+#   error:
+#     - DL3001
+#     - DL3002
+#   warning:
+#     - DL3042
+#     - DL3043

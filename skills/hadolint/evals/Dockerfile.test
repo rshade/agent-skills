@@ -1,0 +1,9 @@
+FROM ubuntu
+RUN apt-get update && apt-get install -y curl wget
+ADD https://example.com/app.tar.gz /app/
+RUN cd /app && tar xzf app.tar.gz | grep -v "^$"
+MAINTAINER test@example.com
+RUN pip install flask requests
+COPY . /app
+EXPOSE 8080
+CMD python /app/main.py

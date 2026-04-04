@@ -1,0 +1,38 @@
+{
+  "skill_name": "shellcheck",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "validate the shell script at skills/shellcheck/evals/test-script.sh using the shellcheck skill",
+      "expected_output": "Report showing shell script validation errors with SC codes and fixes",
+      "files": ["test-script.sh"],
+      "expectations": [
+        "Output references running shellcheck or shell script validation",
+        "Output identifies specific errors like SC2086, SC2164, SC2155, or similar SC codes",
+        "Output suggests concrete fixes for each error found"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "validate all shell scripts in this repository using the shellcheck skill",
+      "expected_output": "Validation report covering shell scripts found in the repository",
+      "files": [],
+      "expectations": [
+        "Output references shellcheck or shell script validation",
+        "Output scans for .sh files across the repository",
+        "Output reports validation results (pass or fail with details)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "check my shell script for portability issues between bash and sh using the shellcheck skill",
+      "expected_output": "Portability-focused validation identifying bash-isms and POSIX compliance issues",
+      "files": ["test-script.sh"],
+      "expectations": [
+        "Output references portability, POSIX, bash-isms, or shell compatibility",
+        "Output identifies bash-specific features used with sh shebang or suggests -s flag",
+        "Output provides fix guidance for portability issues found"
+      ]
+    }
+  ]
+}

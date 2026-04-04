@@ -151,6 +151,12 @@ jobs:
           "Use the decide skill: should our team use red or blue as the primary brand color for a developer tools startup?"
           tests/decide/verify-skill.sh
 
+      - name: Test actionlint skill
+        id: eval-actionlint
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
+        run: ./tests/actionlint/run-tests.sh
+
       - name: Test commitlint skill
         id: eval-commitlint
         if: steps.check-key.outputs.available == 'true'
@@ -168,6 +174,18 @@ jobs:
         if: steps.check-key.outputs.available == 'true'
         continue-on-error: true
         run: ./tests/go-nolint-audit/run-tests.sh
+
+      - name: Test hadolint skill
+        id: eval-hadolint
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
+        run: ./tests/hadolint/run-tests.sh
+
+      - name: Test shellcheck skill
+        id: eval-shellcheck
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
+        run: ./tests/shellcheck/run-tests.sh
 
       - name: Test scout skill
         id: eval-scout
@@ -195,9 +213,12 @@ jobs:
           for eval in \
             "tailscale-install=${{ steps.eval-tailscale-install.outcome }}" \
             "decide=${{ steps.eval-decide.outcome }}" \
+            "actionlint=${{ steps.eval-actionlint.outcome }}" \
             "commitlint=${{ steps.eval-commitlint.outcome }}" \
             "markdownlint=${{ steps.eval-markdownlint.outcome }}" \
             "go-nolint-audit=${{ steps.eval-go-nolint-audit.outcome }}" \
+            "hadolint=${{ steps.eval-hadolint.outcome }}" \
+            "shellcheck=${{ steps.eval-shellcheck.outcome }}" \
             "scout=${{ steps.eval-scout.outcome }}" \
             "pull-request-msg-with-gh=${{ steps.eval-pr-msg.outcome }}" \
             "roadmap=${{ steps.eval-roadmap.outcome }}" \
