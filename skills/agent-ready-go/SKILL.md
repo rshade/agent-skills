@@ -46,7 +46,8 @@ Run this checklist against the project. Address each ❌:
 - [ ] CLI commands support `--json` or `--output json` flag
 - [ ] `.golangci.yml` exists with a thorough linter set
 - [ ] `go test -race` passes
-- [ ] Code coverage ≥ 80% enforced
+- [ ] Primary exported APIs have working `ExampleXxx` tests in godoc
+- [ ] Contract/behavioral testing prioritized over arbitrary line coverage
 - [ ] `go vet ./...` passes clean
 - [ ] All errors wrapped with context (`fmt.Errorf("...: %w", err)`)
 - [ ] Exit codes: 0 = success, non-zero = failure (no panics in CLI entry)
@@ -118,12 +119,12 @@ go test -race -count=1 -timeout=5m -coverprofile=coverage.out ./...
 go tool cover -func=coverage.out | tail -1
 ```
 
-Enforce minimum coverage in CI:
+Do not enforce arbitrary line coverage percentages in CI (e.g., forcing 80%). Agents and humans both benefit more from high-signal contract tests than from padded unit tests.
 
-```bash
-COVERAGE=$(go tool cover -func=coverage.out | tail -1 | awk '{print $3}' | tr -d '%')
-[ $(echo "$COVERAGE >= 80" | bc -l) -eq 1 ] || { echo "Coverage ${COVERAGE}% < 80%"; exit 1; }
-```
+Instead, enforce that all primary exported APIs have working `ExampleXxx` tests:
+1. Examples act as compilation-enforced documentation.
+2. They prove the API contract works as described.
+3. They prevent agents from hallucinating incorrect usage patterns.
 
 ## Step 6: Error Handling
 
