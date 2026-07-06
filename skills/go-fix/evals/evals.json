@@ -1,0 +1,42 @@
+{
+  "skill_name": "go-fix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the go-fix skill to modernize the Go module at skills/go-fix/evals/fixture to current Go idioms",
+      "expected_output": "Fixture modernized to fixed point with build verified and a report of analyzers that fired",
+      "files": ["fixture/go.mod", "fixture/main.go", "fixture/generated.go"],
+      "expectations": [
+        "Verifies the Go toolchain is 1.26+ before running go fix",
+        "Runs go fix more than once (or until go fix -diff exits 0), catching the second-pass minmax collapse to min(max(...), 100)",
+        "main.go no longer contains interface{}, the 3-clause loop, the newCount pointer helper call, or strings.Index+slice pattern",
+        "generated.go (Code generated ... DO NOT EDIT.) is left unmodified",
+        "Verifies the module still builds after fixes and reports which analyzers fired"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Without modifying any files, use the go-fix skill to check whether the Go module at skills/go-fix/evals/fixture is up to date with modern Go idioms, and tell me how to enforce this in CI",
+      "expected_output": "Read-only drift report using go fix -diff plus CI gate guidance based on its exit code",
+      "files": ["fixture/go.mod", "fixture/main.go", "fixture/generated.go"],
+      "expectations": [
+        "Uses go fix -diff (not plain go fix) so no files are modified",
+        "Reports that fixes are available, citing specific patterns such as interface{} to any or range-over-int",
+        "Explains the CI gate: go fix -diff ./... exits non-zero when fixes are available, like gofmt -l",
+        "No files under the fixture are changed by the run"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use the go-fix skill to modernize the Go module at skills/go-fix/evals/fixture-old",
+      "expected_output": "Only fixes compatible with the module's go 1.21 directive applied; go.mod not bumped",
+      "files": ["fixture-old/go.mod", "fixture-old/main.go"],
+      "expectations": [
+        "Applies Go 1.18-1.21 era fixes: interface{} becomes any and strings.Index+slice becomes strings.Cut",
+        "Does not rewrite the 3-clause for loop (needs go 1.22) or the newLimit pointer helper (needs go 1.26)",
+        "Does not raise the go directive in go.mod beyond 1.21",
+        "Report mentions that raising the go directive would unlock additional fixers"
+      ]
+    }
+  ]
+}

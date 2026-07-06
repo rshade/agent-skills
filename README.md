@@ -180,6 +180,22 @@ Includes a ready-to-use `.golangci.yml` and `Makefile`.
   effectively
 - Auditing a Go project against agent-readiness best practices
 
+#### go-fix
+
+Modernize Go code with the rebuilt `go fix` command in Go 1.26+. Verifies
+the toolchain first (older `go fix` silently finds nothing), previews with
+`go fix -diff`, applies fixes to a fixed point, and confirms the build
+still passes. Rewrites are version-aware: a module declaring `go 1.21`
+never receives Go 1.22+ syntax. Covers all 22 analyzers, from
+`interface{}` → `any` through Go 1.26's `new(expr)`, plus
+`//go:fix inline` migrations for library authors.
+
+**Use when:**
+
+- Modernizing Go code to current language and stdlib idioms
+- Adding a modernization drift gate to CI (`go fix -diff` exit code)
+- Migrating callers off deprecated APIs via `//go:fix inline` directives
+
 ### Workflow
 
 #### pull-request-msg-with-gh
