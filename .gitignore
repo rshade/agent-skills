@@ -8,6 +8,13 @@ PR_MESSAGE.md
 # Skill-creator eval workspaces
 *-workspace/
 
+# Git worktrees
+.worktrees/
+
 # Node.js
 node_modules/
 docs/
+
+# Python bytecode
+__pycache__/
+*.py[cod]

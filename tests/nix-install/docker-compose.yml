@@ -1,0 +1,12 @@
+services:
+  test-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    hostname: test-ubuntu
+
+  test-fedora:
+    build:
+      context: .
+      dockerfile: Dockerfile.fedora
+    hostname: test-fedora

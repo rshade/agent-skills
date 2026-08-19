@@ -6,10 +6,11 @@ A curated, trusted collection of AI agent skills that covers the most
 common developer workflows. See [CONTEXT.md](CONTEXT.md) for project
 boundaries.
 
-**Current state**: 9 skills across 5 categories (Code quality,
-Workflow, Decision making, Networking, Project management). Distributed
-via [skills.sh](https://skills.sh), compatible with 40+ AI coding
-agents.
+**Current state**: 23 skills across 9 categories (Code quality,
+Go development, Workflow, Decision making, Networking, Development
+environment, Security & dependencies, Infrastructure cost, Project
+management). Distributed via [skills.sh](https://skills.sh),
+compatible with 40+ AI coding agents.
 
 ## Immediate Focus
 
@@ -40,10 +41,27 @@ Research, exploration, and skills that need scoping decisions.
 - security-audit — Comprehensive security audit (OWASP Top 10)
 - dep-upgrade — Safe systematic dependency upgrade with rollback
 - test-coverage — Systematic test coverage improvement
+- dev-env-audit — Audit installed dev tooling across package
+  managers (apt, dnf, brew, snap, nvm, pyenv, rustup, go install,
+  npm -g, pipx, uv) and emit structured migration report [M]
 - Contribution infrastructure (Tier 3) — CONTRIBUTING.md, PR
   templates, issue templates, co-maintainer onboarding
 
 ## Completed Milestones
+
+### 2026-Q2
+
+- [x] nix-devshell-init — Scaffold reproducible devShell flake.nix
+  from sentinel file detection (Go, Python, Node, Rust, multi-lang) [M]
+- [x] nix-install — Cross-platform Nix package manager install with
+  choice of Determinate Systems or upstream installer; supports Linux,
+  macOS, and WSL2 [M]
+- [x] actionlint — Validate GitHub Actions workflows for syntax,
+  expression errors, and security issues [S]
+- [x] shellcheck — Validate shell scripts for quoting bugs, syntax
+  errors, and portability issues [S]
+- [x] hadolint — Validate Dockerfiles with two-tier install fallback
+  (binary + Docker image) [S]
 
 ### 2026-Q1
 

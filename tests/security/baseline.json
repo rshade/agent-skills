@@ -1,0 +1,97 @@
+{
+  "_comment": "Accepted Snyk Agent Scan findings. CI fails on any finding not listed here. Regenerate with: tests/security/check-baseline.py scan-results.json --update",
+  "_provisional": "Seeded from the Snyk audits published on skills.sh (analyzed 2026-04-22), not from a local scan. Verify against a real run once SNYK_TOKEN is configured, then regenerate with --update. Entries are keyed on (skill, code) only; messages are informational.",
+  "scanner": "snyk-agent-scan@0.5.17",
+  "accepted": [
+    {
+      "skill": "actionlint",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "actionlint",
+      "code": "W013",
+      "message": "System service modification"
+    },
+    {
+      "skill": "agent-ready-go",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "commitlint",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "decide",
+      "code": "W011",
+      "message": "Exposure to untrusted third-party content"
+    },
+    {
+      "skill": "dep-upgrade",
+      "code": "W011",
+      "message": "Exposure to untrusted third-party content"
+    },
+    {
+      "skill": "design-principles",
+      "code": "W007",
+      "message": "Insecure credential handling in skill"
+    },
+    {
+      "skill": "hadolint",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "hadolint",
+      "code": "W013",
+      "message": "System service modification"
+    },
+    {
+      "skill": "markdownlint",
+      "code": "W013",
+      "message": "System service modification"
+    },
+    {
+      "skill": "pull-request-msg-with-gh",
+      "code": "W011",
+      "message": "Exposure to untrusted third-party content"
+    },
+    {
+      "skill": "roadmap",
+      "code": "W011",
+      "message": "Exposure to untrusted third-party content"
+    },
+    {
+      "skill": "scout",
+      "code": "W007",
+      "message": "Insecure credential handling in skill"
+    },
+    {
+      "skill": "shellcheck",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "tailscale-install",
+      "code": "W007",
+      "message": "Insecure credential handling in skill"
+    },
+    {
+      "skill": "tailscale-install",
+      "code": "W012",
+      "message": "Unverifiable external dependency"
+    },
+    {
+      "skill": "tailscale-install",
+      "code": "W013",
+      "message": "System service modification"
+    },
+    {
+      "skill": "tailscale-subnet-router-debug",
+      "code": "W013",
+      "message": "System service modification"
+    }
+  ]
+}

@@ -20,6 +20,57 @@ jobs:
       - name: Run markdownlint
         run: markdownlint 'skills/**/*.md' 'README.md' 'CLAUDE.md'
 
+  snyk-agent-scan:
+    name: Snyk Agent Scan (Skills)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check for SNYK_TOKEN
+        id: check-key
+        run: |
+          if [ -z "$SNYK_TOKEN" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: SNYK_TOKEN secret not available"
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install uv
+        if: steps.check-key.outputs.available == 'true'
+        uses: astral-sh/setup-uv@v10
+
+      - name: Scan skills
+        if: steps.check-key.outputs.available == 'true'
+        run: ./tests/security/run-scan.sh scan-results.json
+
+      - name: Check against accepted-findings baseline
+        if: steps.check-key.outputs.available == 'true'
+        run: |
+          {
+            echo '## Snyk Agent Scan'
+            echo '```text'
+          } >> "$GITHUB_STEP_SUMMARY"
+          # pipefail so tee does not mask the checker's exit code, and "|| STATUS=$?"
+          # so bash -e does not abort before the code fence is closed.
+          set -o pipefail
+          STATUS=0
+          python3 tests/security/check-baseline.py scan-results.json \
+            | tee -a "$GITHUB_STEP_SUMMARY" || STATUS=$?
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          exit "$STATUS"
+
+      - name: Upload scan results
+        if: always() && steps.check-key.outputs.available == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: snyk-agent-scan-results
+          path: scan-results.json
+          if-no-files-found: ignore
+
   test-install-tier1-2:
     name: Tailscale Install (Tier 1-2)
     runs-on: ubuntu-latest
@@ -46,6 +97,30 @@ jobs:
       - name: Cleanup
         if: always()
         working-directory: tests/tailscale-install
+        run: docker compose down --remove-orphans 2>/dev/null || true
+
+  test-nix-install:
+    name: Nix Install (Tier 1-2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build test containers
+        working-directory: tests/nix-install
+        run: docker compose build
+
+      - name: Test Ubuntu
+        working-directory: tests/nix-install
+        run: docker compose run --rm test-ubuntu
+
+      - name: Test Fedora
+        working-directory: tests/nix-install
+        run: docker compose run --rm test-fedora
+
+      - name: Cleanup
+        if: always()
+        working-directory: tests/nix-install
         run: docker compose down --remove-orphans 2>/dev/null || true
 
   test-install-tier3:
@@ -141,6 +216,26 @@ jobs:
           "install tailscale on this machine"
           tests/tailscale-install/verify-skill.sh
 
+      - name: Test nix-install skill
+        id: eval-nix-install
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
+        run: >-
+          ./tests/run-skill-test.sh
+          nix-install
+          "install nix on this machine"
+          tests/nix-install/verify-skill.sh
+
+      - name: Test nix-devshell-init skill
+        id: eval-nix-devshell-init
+        if: steps.check-key.outputs.available == 'true'
+        continue-on-error: true
+        run: >-
+          ./tests/run-skill-test.sh
+          nix-devshell-init
+          "initialize a nix devshell for this go project"
+          tests/nix-devshell-init/verify-skill.sh
+
       - name: Test decide skill
         id: eval-decide
         if: steps.check-key.outputs.available == 'true'
@@ -218,6 +313,8 @@ jobs:
           FAILED=0
           for eval in \
             "tailscale-install=${{ steps.eval-tailscale-install.outcome }}" \
+            "nix-install=${{ steps.eval-nix-install.outcome }}" \
+            "nix-devshell-init=${{ steps.eval-nix-devshell-init.outcome }}" \
             "decide=${{ steps.eval-decide.outcome }}" \
             "actionlint=${{ steps.eval-actionlint.outcome }}" \
             "commitlint=${{ steps.eval-commitlint.outcome }}" \

@@ -138,3 +138,30 @@ Requires `OPENCODE_API_KEY` in `.env` for agent tests. See
   `skills/commitlint/references/conventional-commits.md` if the project
   has no commitlint config.
 - Ensure all files end with a newline.
+- Run `actionlint` on any modified `.github/workflows/*.yml` and
+  `shellcheck` on any modified shell script.
+
+## Security scanning
+
+skills.sh audits every published skill with Gen Agent Trust Hub, Socket,
+and Snyk Agent Scan. Snyk analyzes what `SKILL.md` instructs an agent to
+do, not code vulnerabilities. Common codes: `W007` credential handling,
+`W011` untrusted third-party content, `W012` runtime-fetched dependency,
+`W013` system service modification. Per-skill results live at
+`https://skills.sh/rshade/agent-skills/<skill>/security/snyk`.
+
+CI runs the same scanner (`tests/security/run-scan.sh`) and compares it to
+`tests/security/baseline.json` via `tests/security/check-baseline.py`. The
+baseline is a ratchet: new findings fail the build, accepted ones do not.
+A baselined finding that stops being reported only warns, except for the
+credential codes (`W007`/`W008`), which fail until the entry is pruned —
+the scanner is LLM-backed and flaps, so blocking on every stale entry
+would red-build on noise.
+
+- The scanner version is pinned to `0.5.17` in `run-scan.sh`. Do not
+  switch to `@latest` — v0.6 replaces `W*` codes with scored risk
+  indicators and changes the JSON root shape, which breaks the baseline.
+- Adding a skill that installs software or fetches remote content will
+  produce findings. Fix what is fixable, then accept the rest with
+  `check-baseline.py scan-results.json --update` and explain why in the PR.
+- Requires `SNYK_TOKEN`. CI skips the job when the secret is absent.

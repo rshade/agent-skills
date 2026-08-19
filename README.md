@@ -19,11 +19,13 @@ and [40+ other AI coding agents](https://skills.sh).
   - [Workflow](#workflow)
   - [Decision making](#decision-making)
   - [Networking](#networking)
+  - [Development environment](#development-environment)
   - [Security & dependencies](#security--dependencies)
   - [Infrastructure cost](#infrastructure-cost)
   - [Project management](#project-management)
 - [Installation](#installation)
 - [Skill structure](#skill-structure)
+- [Security ratings](#security-ratings)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -268,6 +270,36 @@ policy routing (table 52), and IP forwarding.
 - Docker containers fail to advertise routes via `TS_ROUTES`
 - Traffic flows to the target but responses never come back
 
+### Development environment
+
+#### nix-devshell-init
+
+Scaffold a reproducible Nix devShell for a project. Detects language(s)
+from sentinel files (go.mod, package.json, pyproject.toml, Cargo.toml),
+generates a flake.nix with appropriate packages and tooling, creates an
+.envrc for direnv, and verifies the shell builds.
+
+**Use when:**
+
+- Adding Nix to an existing project for reproducible dev dependencies
+- Onboarding to a repo that should pin its toolchain
+- Setting up a new project with a devShell from scratch
+- Converting a multi-language monorepo to use Nix
+
+#### nix-install
+
+Install the Nix package manager across platforms with a choice of
+installer (Determinate Systems or upstream nixos.org). Detects OS,
+distro, and environment (including WSL2), verifies any existing
+installation, and enables flakes.
+
+**Use when:**
+
+- Setting up Nix on a new developer machine
+- Onboarding to a Nix-based project that needs flakes
+- Verifying or repairing an existing Nix installation
+- Choosing between the Determinate Systems and upstream installers
+
 ### Security & dependencies
 
 #### dep-upgrade
@@ -366,6 +398,8 @@ npx skills add rshade/agent-skills -s go-nolint-audit
 npx skills add rshade/agent-skills -s hadolint
 npx skills add rshade/agent-skills -s lint-fix
 npx skills add rshade/agent-skills -s markdownlint
+npx skills add rshade/agent-skills -s nix-devshell-init
+npx skills add rshade/agent-skills -s nix-install
 npx skills add rshade/agent-skills -s pull-request-msg-with-gh
 npx skills add rshade/agent-skills -s roadmap
 npx skills add rshade/agent-skills -s scout
@@ -391,6 +425,68 @@ Each skill is a directory under `skills/` containing:
 Skills use progressive disclosure: `SKILL.md` has the concise workflow
 an agent needs to act, while `references/` holds the details agents
 consult only when needed.
+
+## Security ratings
+
+Every skill on skills.sh carries a security rating from three independent
+auditors — Gen Agent Trust Hub, Socket, and
+[Snyk Agent Scan](https://github.com/snyk/agent-scan). Several skills here
+are rated **Medium** or **High** risk. That is expected, and worth
+understanding before you install anything.
+
+**These are capability audits, not vulnerability scans.** Snyk reads
+`SKILL.md` as an instruction set and asks what it tells an agent to *do*. It
+is not reporting a bug, a CVE, or a compromised dependency — it is reporting
+that the skill's normal, documented behavior touches something sensitive:
+
+- **`W007` — credential handling.** The skill could put a secret into agent
+  output. `scout` reads whole files and quotes code back to you;
+  `tailscale-install` passes an auth key on a command line.
+- **`W011` — untrusted third-party content.** The skill fetches and reasons
+  over public web content, which is an indirect prompt-injection surface.
+  `decide` cites external sources in its debate; `roadmap` and `dep-upgrade`
+  research upstream projects.
+- **`W012` — runtime-fetched dependency.** The skill downloads the tool it
+  wraps instead of assuming it is present. `shellcheck` and `hadolint` pull
+  a release binary; `actionlint` can `go install ...@latest`.
+- **`W013` — system modification.** The skill changes machine state.
+  `tailscale-install` enables a systemd unit, `hadolint` writes to
+  `/usr/local/bin`, and `markdownlint` falls back to `sudo npm install -g`.
+
+A skill that installs a linter cannot avoid `W012`. A skill that grounds a
+decision in outside evidence cannot avoid `W011`. Designing the rating away
+would mean removing the capability the skill exists to provide, so these
+ratings stand as accurate descriptions rather than defects to be suppressed.
+
+**Read the `SKILL.md` before you install.** It is plain markdown with no
+build step, no minification, and no runtime code fetch — the file in this
+repository is exactly what your agent will be told to do. That transparency
+is the point of the format: a rating tells you *where* to look, and the skill
+body tells you whether you are comfortable with it. Pay particular attention
+to skills rated High, and to any skill that installs software or runs with
+elevated privileges.
+
+Live per-skill results, including the full reasoning behind each finding, are
+at `https://skills.sh/rshade/agent-skills/<skill>/security/snyk`.
+
+### Scanning in CI
+
+CI runs the same scanner against `skills/` on every PR and compares it to
+`tests/security/baseline.json`, a reviewed record of accepted findings. New
+findings fail the build; already-accepted ones do not. A finding that
+disappears is reported but tolerated, since the scanner is LLM-backed and a
+result can flap between runs — the exception is the credential codes
+(`W007`/`W008`), which fail until the stale entry is pruned. To run it
+locally:
+
+```bash
+export SNYK_TOKEN=...              # https://app.snyk.io/account
+tests/security/run-scan.sh scan-results.json
+tests/security/check-baseline.py scan-results.json
+```
+
+When a change legitimately introduces a finding, re-run with `--update` and
+commit `baseline.json` with an explanation of why the risk is accepted.
 
 ## Contributing
 
