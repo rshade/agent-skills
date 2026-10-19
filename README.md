@@ -335,27 +335,23 @@ SECURITY_AUDIT.md with prioritized remediation.
 
 #### cost-check
 
-Generic cost estimation for IaC projects. Detects the IaC stack and
-compatible cost tool, runs cost analysis, and flags expensive resources
-against configurable thresholds.
+Moved to [rshade/finfocus](https://github.com/rshade/finfocus/tree/main/agent-skills/cost-check),
+where it runs the FinFocus CLI and reads its JSON. The directory here is a
+stub that points to the new location.
 
-**Use when:**
-
-- Checking infrastructure costs in a Pulumi or Terraform project
-- Reviewing cost impact of infrastructure changes
-- Enforcing budget thresholds in CI pipelines
+```bash
+npx skills add rshade/finfocus -s cost-check
+```
 
 #### cost-drift
 
-Drift analysis for Pulumi infrastructure costs. Compares actual vs
-projected spend, flags drifting resources, and generates likely-cause
-explanations with investigation prompts.
+Moved to [rshade/finfocus](https://github.com/rshade/finfocus/tree/main/agent-skills/cost-drift),
+where it runs the FinFocus CLI and reads its JSON. The directory here is a
+stub that points to the new location.
 
-**Use when:**
-
-- Investigating why actual cloud spend differs from projections
-- Monitoring cost drift trends over time
-- Validating that infrastructure changes reduced costs as expected
+```bash
+npx skills add rshade/finfocus -s cost-drift
+```
 
 ### Project management
 
@@ -389,8 +385,6 @@ Install a specific skill:
 npx skills add rshade/agent-skills -s actionlint
 npx skills add rshade/agent-skills -s agent-ready-go
 npx skills add rshade/agent-skills -s commitlint
-npx skills add rshade/agent-skills -s cost-check
-npx skills add rshade/agent-skills -s cost-drift
 npx skills add rshade/agent-skills -s decide
 npx skills add rshade/agent-skills -s dep-upgrade
 npx skills add rshade/agent-skills -s design-principles
@@ -410,6 +404,11 @@ npx skills add rshade/agent-skills -s tailscale-install
 npx skills add rshade/agent-skills -s tailscale-subnet-router-debug
 npx skills add rshade/agent-skills -s tech-debt
 ```
+
+`cost-check` and `cost-drift` moved to
+[rshade/finfocus](https://github.com/rshade/finfocus/tree/main/agent-skills).
+Install them from there with `npx skills add rshade/finfocus -s cost-check`
+and `npx skills add rshade/finfocus -s cost-drift`.
 
 ## Skill structure
 
